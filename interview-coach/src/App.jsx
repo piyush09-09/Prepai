@@ -306,11 +306,14 @@ export default function App() {
   const [showAuth, setShowAuth] = useState(false)
 
 
-  useEffect(() => {
-    fetch("https://prepai-production-8ab9.up.railway.app")
-      .then(r => r.json())
-      .then(data => setQuestion(data.questions))
-  }, [])
+useEffect(() => {
+  fetch("https://prepai-production-8ab9.up.railway.app/questions")
+    .then(r => r.json())
+    .then(data => {
+      if (data.questions) setQuestion(data.questions)
+    })
+    .catch(err => console.log("Failed to fetch questions:", err))
+}, [])
 
   useEffect(() => {
     if (!started) return
