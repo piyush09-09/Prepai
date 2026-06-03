@@ -6,7 +6,7 @@ export function HistoryView({ token }) {
   const [selectedSession, setSelectedSession] = useState(null)
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/history", {
+    fetch("https://prepai-production-8ab9.up.railway.app/history", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(r => r.json())
@@ -212,7 +212,7 @@ export default function Profile({ token, user }) {
   const [sessions, setSessions] = useState([])
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/history", {
+    fetch("https://prepai-production-8ab9.up.railway.app/history", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(r => r.json())

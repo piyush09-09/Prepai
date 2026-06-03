@@ -307,7 +307,7 @@ export default function App() {
 
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/questions")
+    fetch("https://prepai-production-8ab9.up.railway.app")
       .then(r => r.json())
       .then(data => setQuestion(data.questions))
   }, [])
@@ -337,7 +337,7 @@ export default function App() {
   useEffect(() => {
     if (currentPage !== "dashboard" || !token) return
 
-    fetch("http://127.0.0.1:8000/history", {
+    fetch("https://prepai-production-8ab9.up.railway.app/history", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(r => r.json())
@@ -402,7 +402,7 @@ export default function App() {
     formData.append("question", question[currentIndex])
     formData.append("user_id", localStorage.getItem("user_id") || 0)
 
-    const response = await fetch("http://127.0.0.1:8000/transcribe-and-feedback", {
+    const response = await fetch("https://prepai-production-8ab9.up.railway.app/transcribe-and-feedback", {
       method: "POST",
       body: formData
     })
@@ -517,7 +517,7 @@ export default function App() {
                       {jdText.trim().length > 0 && (
                         <button
                           onClick={async () => {
-                            await fetch("http://127.0.0.1:8000/upload-jd", {
+                            await fetch("https://prepai-production-8ab9.up.railway.app/upload-jd", {
                               method: "POST",
                               headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                               body: JSON.stringify({ jd_text: jdText })
@@ -673,7 +673,7 @@ export default function App() {
                                 (sessionHistory.length >= 3 ? 30 : (sessionHistory.length / 3) * 30) +
                                 Math.max(0, 30 - totalFillers * 3)
                               ))
-                              await fetch("http://127.0.0.1:8000/save-session", {
+                              await fetch("https://prepai-production-8ab9.up.railway.app/save-session", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                                 body: JSON.stringify({ overall_score: overallScore, answers: sessionHistory })

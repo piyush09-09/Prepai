@@ -13,8 +13,8 @@ export default function Auth({ onLogin }) {
     setError("")
 
     const url = isLogin
-      ? "http://127.0.0.1:8000/login"
-      : "http://127.0.0.1:8000/signup"
+      ? "https://prepai-production-8ab9.up.railway.app/login"
+      : "https://prepai-production-8ab9.up.railway.app/signup"
 
     const body = isLogin
       ? new URLSearchParams({ username: email, password })
