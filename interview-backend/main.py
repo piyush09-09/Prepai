@@ -11,10 +11,18 @@ from rag import retrieve_relevant_examples, examples, store_job_description, ret
 from database import get_db, User, InterviewSession, Answer, create_tables
 from auth import hash_password, verify_password, create_access_token, get_current_user
 from auth import SECRET_KEY, ALGORITHM
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from fastapi import Request
 
 load_dotenv()
 
 app = FastAPI()
+
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 create_tables()
 
@@ -49,17 +57,18 @@ class JDRequest(BaseModel):
 
 # ─── Auth Routes ────────────────────────────────────────────
 @app.post("/signup")
-def signup(request: SignupRequest, db: Session = Depends(get_db)):
+@limiter.limit("5/hour")
+def signup(request: Request, signup_data: SignupRequest, db: Session = Depends(get_db)):
     existing = db.query(User).filter(
-        (User.email == request.email) | (User.username == request.username)
+        (User.email == signup_data.email) | (User.username == signup_data.username)
     ).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email or username already exists")
 
     user = User(
-        email=request.email,
-        username=request.username,
-        hashed_password=hash_password(request.password)
+        email=signup_data.email,
+        username=signup_data.username,
+        hashed_password=hash_password(signup_data.password)
     )
     db.add(user)
     db.commit()
@@ -69,7 +78,8 @@ def signup(request: SignupRequest, db: Session = Depends(get_db)):
     return {"access_token": token, "token_type": "bearer", "username": user.username, "user_id": user.id}
 
 @app.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect email or password")
@@ -88,12 +98,14 @@ def get_questions():
 
 # ─── JD Upload Route ─────────────────────────────────────────
 @app.post("/upload-jd")
+@limiter.limit("10/hour")
 def upload_jd(
-    request: JDRequest,
+    request: Request,
+    jd_data: JDRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    store_job_description(current_user.id, request.jd_text)
+    store_job_description(current_user.id, jd_data.jd_text)
     return {"message": "Job description stored successfully"}
 
 # ─── Session Save Route ──────────────────────────────────────
@@ -169,7 +181,9 @@ def get_feedback(request: AnswerRequest):
     return {"feedback": response.choices[0].message.content}
 
 @app.post("/transcribe-and-feedback")
+@limiter.limit("20/hour")
 async def transcribe_and_feedback(
+    request: Request,
     audio: UploadFile,
     question: str = Form(...),
     authorization: str = Form("")
