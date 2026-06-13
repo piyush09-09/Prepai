@@ -43,7 +43,7 @@ export default function Layout({ user, onLogout, currentPage, setCurrentPage,onP
           overflow: "hidden"
         }}>
           <div style={{
-            width: "28px", height: "28px", background: "#3B82F6",
+            width: "28px", height: "28px", background: "#2563eb",
             borderRadius: "8px", display: "flex", alignItems: "center",
             justifyContent: "center", flexShrink: 0
           }}>

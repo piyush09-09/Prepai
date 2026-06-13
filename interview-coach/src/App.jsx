@@ -144,7 +144,7 @@ function MicCapture({ started, onStream }) {
         <div style={{
           height: "100%",
           width: `${Math.min(volume * 3, 100)}%`,
-          background: volume > 20 ? "#48BB78" : "#3B82F6",
+          background: volume > 20 ? "#48BB78" : "#2563eb",
           borderRadius: "4px",
           transition: "width 0.1s"
         }} />
@@ -185,7 +185,7 @@ function FeedbackPanel({ feedback, isLoading }) {
       <div style={{ color: "#718096", fontSize: "12px", marginBottom: "10px" }}>AI Feedback</div>
       {isLoading && (
         <div style={{ color: "#4A5568", fontSize: "13px", display: "flex", alignItems: "center", gap: "8px" }}>
-          <div style={{ width: "8px", height: "8px", background: "#3B82F6", borderRadius: "50%" }} />
+          <div style={{ width: "8px", height: "8px", background: "#2563eb", borderRadius: "50%" }} />
           Analyzing your answer...
         </div>
       )}
@@ -202,7 +202,7 @@ function ScoreDisplay({ answer, eyeContactPct }) {
   const fillerCount = words.filter(w => fillerWords.includes(w.toLowerCase())).length
 
   const metrics = [
-    { label: "Words Spoken", value: wordCount, color: "#3B82F6" },
+    { label: "Words Spoken", value: wordCount, color: "#2563eb" },
     { label: "Filler Words", value: fillerCount, color: fillerCount > 3 ? "#FC8181" : "#48BB78" },
     { label: "Eye Contact", value: `${eyeContactPct}%`, color: eyeContactPct >= 70 ? "#48BB78" : eyeContactPct >= 40 ? "#ECC94B" : "#FC8181" },
     { label: "Rating", value: wordCount === 0 ? "—" : wordCount < 20 ? "Short" : wordCount < 50 ? "Good" : "Great", color: "#9F7AEA" },
@@ -271,7 +271,7 @@ function SessionSummary({ history, onRestart }) {
         onClick={onRestart}
         style={{
           marginTop: "8px", padding: "10px 24px",
-          background: "#3B82F6", color: "white",
+          background: "#2563eb", color: "white",
           border: "none", borderRadius: "8px", fontSize: "13px"
         }}
       >
@@ -403,7 +403,7 @@ useEffect(() => {
     const formData = new FormData()
     formData.append("audio", audioBlob, "answer.webm")
     formData.append("question", question[currentIndex])
-    formData.append("user_id", localStorage.getItem("user_id") || 0)
+    formData.append("authorization", localStorage.getItem("token") || "")
 
     const response = await fetch("https://prepai-production-8ab9.up.railway.app/transcribe-and-feedback", {
       method: "POST",
@@ -543,7 +543,7 @@ useEffect(() => {
                     <button
                       onClick={() => setStarted(true)}
                       style={{
-                        padding: "11px 28px", background: "#3B82F6",
+                        padding: "11px 28px", background: "#2563eb",
                         color: "white", border: "none", borderRadius: "8px",
                         fontSize: "14px", fontWeight: "500"
                       }}
@@ -653,7 +653,7 @@ useEffect(() => {
                         <button
                           onClick={handleSubmit}
                           style={{
-                            padding: "9px 20px", background: "#3B82F6",
+                            padding: "9px 20px", background: "#2563eb",
                             color: "white", border: "none", borderRadius: "8px",
                             fontSize: "13px", fontWeight: "500"
                           }}
@@ -716,7 +716,7 @@ useEffect(() => {
                   label: "Latest Score",
                   value: dashboardStats ? `${dashboardStats.latestScore}` : "—",
                   sub: dashboardStats ? `Best: ${dashboardStats.bestScore}/100` : "Complete a session",
-                  color: "#3B82F6",
+                  color: "#2563eb",
                   pct: dashboardStats ? dashboardStats.latestScore : 0
                 },
                 {
@@ -758,7 +758,7 @@ useEffect(() => {
                   <span>Recent Sessions</span>
                   <span
                     onClick={() => setCurrentPage("history")}
-                    style={{ color: "#3B82F6", fontSize: "12px", cursor: "pointer" }}
+                    style={{ color: "#2563eb", fontSize: "12px", cursor: "pointer" }}
                   >
                     View all →
                   </span>
@@ -833,7 +833,7 @@ useEffect(() => {
               <button
                 onClick={() => setCurrentPage("interview")}
                 style={{
-                  padding: "10px 20px", background: "#3B82F6",
+                  padding: "10px 20px", background: "#2563eb",
                   color: "white", border: "none", borderRadius: "8px",
                   fontSize: "13px", fontWeight: "500", whiteSpace: "nowrap"
                 }}

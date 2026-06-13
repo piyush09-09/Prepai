@@ -5,8 +5,9 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from database import get_db, User
+import os
 
-SECRET_KEY = "your-secret-key-change-this-in-production"
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-fallback-key-not-for-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
 

@@ -127,10 +127,10 @@ export function HistoryView({ token }) {
                     {[25, 50, 75].map(v => (
                       <line key={v} x1={padL} y1={yPos(v)} x2={padL + innerW} y2={yPos(v)} stroke="#eee" strokeWidth={1} strokeDasharray="4 4" />
                     ))}
-                    <polyline points={points} fill="none" stroke="#3B82F6" strokeWidth={2.5} />
+                    <polyline points={points} fill="none" stroke="#2563eb" strokeWidth={2.5} />
                     {chartData.map((d, i) => (
                       <circle
-                        key={i} cx={xPos(i)} cy={yPos(d.score)} r={6} fill="#3B82F6"
+                        key={i} cx={xPos(i)} cy={yPos(d.score)} r={6} fill="#2563eb"
                         style={{ cursor: "pointer" }}
                         onMouseEnter={(e) => {
                           const tooltip = document.getElementById("chart-tooltip")
@@ -265,7 +265,7 @@ export default function Profile({ token, user }) {
             )}
             <label style={{
               position: "absolute", bottom: 0, right: 0,
-              background: "#3B82F6", borderRadius: "50%",
+              background: "#2563eb", borderRadius: "50%",
               width: "22px", height: "22px", display: "flex",
               alignItems: "center", justifyContent: "center", cursor: "pointer"
             }}>
@@ -292,7 +292,7 @@ export default function Profile({ token, user }) {
                     localStorage.setItem("username", newUsername)
                     setEditingUsername(false)
                   }}
-                  style={{ padding: "7px 14px", background: "#3B82F6", color: "white", border: "none", borderRadius: "8px", fontSize: "13px", cursor: "pointer" }}
+                  style={{ padding: "7px 14px", background: "#2563eb", color: "white", border: "none", borderRadius: "8px", fontSize: "13px", cursor: "pointer" }}
                 >
                   Save
                 </button>
@@ -404,7 +404,7 @@ export default function Profile({ token, user }) {
                 setTimeout(() => setChangingPassword(false), 1500)
               }}
               style={{
-                padding: "9px 20px", background: "#3B82F6",
+                padding: "9px 20px", background: "#2563eb",
                 color: "white", border: "none", borderRadius: "8px",
                 fontSize: "13px", cursor: "pointer", alignSelf: "flex-start"
               }}

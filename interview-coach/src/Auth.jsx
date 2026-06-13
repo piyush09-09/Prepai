@@ -59,7 +59,7 @@ export default function Auth({ onLogin }) {
         {/* logo */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "40px", justifyContent: "center" }}>
           <div style={{
-            width: "36px", height: "36px", background: "#3B82F6",
+            width: "36px", height: "36px", background: "#2563eb",
             borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center"
           }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -145,7 +145,7 @@ export default function Auth({ onLogin }) {
             disabled={loading}
             style={{
               width: "100%", padding: "11px",
-              background: loading ? "#1E3A6E" : "#3B82F6",
+              background: loading ? "#1E3A6E" : "#2563eb",
               color: "white", border: "none", borderRadius: "8px",
               fontSize: "14px", fontWeight: "500",
               cursor: loading ? "not-allowed" : "pointer"
@@ -158,7 +158,7 @@ export default function Auth({ onLogin }) {
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <span
               onClick={() => { setIsLogin(!isLogin); setError("") }}
-              style={{ color: "#3B82F6", cursor: "pointer" }}
+              style={{ color: "#2563eb", cursor: "pointer" }}
             >
               {isLogin ? "Sign up" : "Sign in"}
             </span>

@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from rag import retrieve_relevant_examples, examples, store_job_description, retrieve_jd_context
 from database import get_db, User, InterviewSession, Answer, create_tables
 from auth import hash_password, verify_password, create_access_token, get_current_user
+from auth import SECRET_KEY, ALGORITHM
 
 load_dotenv()
 
@@ -19,7 +20,10 @@ create_tables()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://prepai-azure.vercel.app",
+        "http://localhost:5173"
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -168,8 +172,25 @@ def get_feedback(request: AnswerRequest):
 async def transcribe_and_feedback(
     audio: UploadFile,
     question: str = Form(...),
-    user_id: int = Form(0)
+    authorization: str = Form("")
 ):
+    # get user_id from JWT token instead of trusting frontend
+    user_id = 0
+    if authorization:
+        try:
+            from jose import jwt
+            payload = jwt.decode(authorization, SECRET_KEY, algorithms=[ALGORITHM])
+            email = payload.get("sub")
+            if email:
+                from database import SessionLocal
+                db = SessionLocal()
+                user = db.query(User).filter(User.email == email).first()
+                if user:
+                    user_id = user.id
+                db.close()
+        except:
+            pass
+
     with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as f:
         f.write(await audio.read())
         temp_path = f.name
@@ -184,7 +205,6 @@ async def transcribe_and_feedback(
 
     transcript = transcription.strip()
 
-    # retrieve JD context if user uploaded one
     jd_context = ""
     if user_id > 0:
         jd_context = retrieve_jd_context(user_id, question, transcript)
